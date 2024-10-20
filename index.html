@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>卒制試作</title>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="keywords" content="">
+<meta name="description" content="">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<style type="text/css">
+
+html,body{
+	margin: 0;
+   width: 100%;
+   height: 100%;
+}
+
+#hako{
+  position: relative;
+  width: 100%;
+  height: calc(100vw / 16.0 * 9.0);
+}
+
+#video2{
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+  mix-blend-mode: Color-dodge;
+}
+
+#Tempo{
+  position: absolute;
+  bottom: 0;
+  font-size: 20px;
+}
+
+#inputSliderResult{
+  bottom: 10%;
+  font-size: 20px;
+}
+
+#video{
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+  }
+
+
+#slide{
+  position: absolute;
+  width: 100%;
+  z-index: 300;
+  top: calc(50% - 8px);
+   mix-blend-mode: color-dodge;
+ }
+
+#inputSlider{
+  position: relative;
+  margin: auto;
+  width: 63%;
+  display: block;
+  background-color: black;
+  background: transparent;
+  border: none;
+  outline: none;
+  -webkit-appearance: none; /* 🚩これ無しだとスタイルがほぼ全く反映されないので注意 */
+  appearance: none;
+}
+
+/* Thumb: Chrome, Safari, Opera, Edge Chromium */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 60px;
+  width: 60px;
+  margin-top: -6px; /* 位置の調整が必要 */
+  background-color: #FFD200;
+/*  border-radius: 50%;
+*/
+}
+
+#play{
+  position: relative;
+  bottom: 0;
+  z-index: 400;
+}
+
+</style>
+<script>
+onload = function(){
+	sizeChosei();
+	$(window).resize(function(){
+		sizeChosei();
+	});
+};
+
+
+function sizeChosei(){
+	$("html").css({"font-size":(window.innerWidth/100)+"px"});
+};
+
+
+
+
+
+var a = 0;
+
+setInterval(function(){
+
+  a += 1;
+
+  if(a > 4){
+    a = 1;
+  }
+  else{};
+
+  document.getElementById("Tempo").innerHTML = a;
+  //console.log(a);
+
+}, 60 / 100 * 1000);
+
+
+
+
+</script>
+</head>
+<body>
+
+<p id="Tempo"></p>
+
+<div id="hako">
+<video id="video" src="movs/shisaku4.mp4" loop></video>
+<div id="slide">
+      <input type="range" class="input-range" name="foo" id="inputSlider" min="0" max="100" value="0" />
+    </div>
+</div>
+
+
+    <div>
+      <p id="inputSliderResult"></p>
+    </div>
+
+<button id="play">再生</button>
+
+
+
+
+</body>
+
+
+<script>
+
+const inputSlider = document.querySelector("#inputSlider");
+const inputSliderResult = document.querySelector("#inputSliderResult");
+const video2 = document.querySelector("#video2");
+var atai;
+var k;
+var h;
+var kaisu = 0;
+
+const btn_play = document.querySelector("#play");
+const video = document.querySelector("#video");
+
+btn_play.addEventListener("click", e => {
+  video.play();
+});
+
+
+
+inputSlider.addEventListener("input", (e) => //値取得
+ {
+  const value = e.target.value;
+  inputSliderResult.innerHTML = value;
+ // console.log(inputSlider.value);
+});
+
+
+
+inputSlider.addEventListener("input", function (){  //値切り替え
+
+  atai = Math.abs(inputSlider.value);
+  k = atai / 100;  //割合
+  h = 60 / 100 ; 
+  video2.currentTime = k * h + kaisu;       //割合＊1拍　（秒）
+
+  if(inputSlider.value == inputSlider.max){
+    console.log("max");
+    //console.log(inputSlider.value);
+    //atai = Math.abs(inputSlider.value);
+    //console.log(atai);
+
+    console.log(video2.currentTime);
+    console.log(kaisu);
+
+
+    if(inputSlider.max == 100){
+      inputSlider.min = -100;
+      inputSlider.max = 0;
+      }
+    else if(inputSlider.max == 0){
+      inputSlider.max = 100;
+      inputSlider.min = 0;
+    }
+  };
+
+  if(inputSlider.value == inputSlider.min){
+    console.log("min");
+    //console.log(inputSlider.value);
+    //atai = Math.abs(inputSlider.value);
+    //console.log(atai);
+
+    console.log(video2.currentTime);
+    console.log(kaisu);
+    
+    if(inputSlider.min == 0){
+      inputSlider.max = 0;
+      inputSlider.min = -100;
+    }
+    else if(inputSlider.min == -100){
+      inputSlider.max = 100;
+      inputSlider.min = 0;
+    }
+    };
+  
+   //console.log(video2.currentTime);
+   //console.log(kaisu);
+   if(atai == 100){
+    kaisu += 0.6;
+   };
+
+
+   if(kaisu == 2.4){
+     kaisu = 0;
+     console.log("reset");
+   };
+
+  
+});
+
+
+
+
+
+
+
+</script>
+
+</html>
